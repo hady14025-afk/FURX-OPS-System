@@ -1,0 +1,235 @@
+================================================================================
+FURX OPS SYSTEM — HTML TEMPLATES SUMMARY
+================================================================================
+
+Project: FURX Operations Management System (Flask + SQLAlchemy)
+Location: /mnt/FURX COMPANY/FURX-OPS-System/templates/
+
+Total Templates Created: 17 HTML files
+- 14 New templates (as requested)
+- 3 Existing templates (base.html, dashboard.html, login.html)
+
+================================================================================
+NEW TEMPLATES (14) — CREATED IN THIS SESSION
+================================================================================
+
+1. submit_report.html
+   - Dynamic form that renders based on ReportTemplate fields
+   - Shows list of available templates with submitted status
+   - When user selects a template, displays form with dynamic fields
+   - Supports field types: text, number, checkbox, select, textarea
+   - Auto-selects template from URL parameter (?template=ID)
+   - Include notes textarea and submit/cancel buttons
+
+2. report_history.html
+   - Paginated list of past reports submitted by employee
+   - Date filters (from_date, to_date)
+   - Shows: date, template name, submission time, status
+   - Click "عرض التفاصيل" to view full report details
+   - Status badges: مُرسَل (blue), تمت مراجعته (green), معلَّم (yellow)
+
+3. view_report.html
+   - Single report view showing all field values
+   - Clean card layout with template field labels next to values
+   - Displays report metadata: template name, date, time
+   - Shows notes if any
+   - Displays review status and reviewed_by info if applicable
+
+4. kpi_list.html
+   - List of all KPI records for the logged-in employee
+   - Stats: total count, pending count, average score, best grade
+   - Table with: period, template name, total score, grade, status, action
+   - Grades color-coded: A=green, B=blue, C=yellow, D=orange, E=red
+   - Status options: pending, self_assessed, manager_reviewed, final
+   - Links to kpi_submit for pending records
+
+5. kpi_submit.html
+   - Self-assessment form for KPI scoring
+   - Shows each KPI item with name, description, weight, max_score
+   - Range slider (0 to max_score) for each item
+   - Real-time score display and weighted total calculation
+   - Displays final grade based on weighted average (A-E scale)
+   - Notes textarea for additional comments
+   - Submit and cancel buttons
+
+6. production.html
+   - Weekly production plan view with date filter
+   - Shows plans grouped by day of week
+   - Each plan displays: line name, status, plan items, achievement %
+   - Progress bar showing achievement percentage
+   - Status badges: planned (blue), in_progress (yellow), completed (green)
+   - Button to update plan achievement
+
+7. create_plan.html
+   - Form to create new production plan
+   - Fields: date, production line (bedroom_dining, upholstery, custom)
+   - Dynamic product rows: product name, quantity, priority
+   - Add/remove product functionality via JavaScript
+   - Notes textarea
+   - Submit and cancel buttons
+
+8. notifications.html
+   - List of all notifications with read/unread status
+   - Type-based icons: info (blue), warning (yellow), urgent (red), reminder (amber)
+   - Stats: total, unread, urgent count
+   - Each notification shows: title, message, timestamp, read status
+   - "Mark all read" button if unread_count > 0
+   - Click link to navigate to relevant action
+
+9. profile.html
+   - Employee profile card with name, role, department, grade
+   - Contact info: email, phone, reports_to
+   - Change password form (old password + new password)
+   - Stats sidebar: reports submitted, average KPI score
+   - Quick action buttons to submit reports, view KPIs, etc.
+   - Account status badge (نشط/Active)
+
+10. team_reports.html
+    - For managers: shows direct reports' submission status today
+    - Table with: employee name, department, reports submitted, status
+    - Green check (✓) if submitted, red X (✗) if not
+    - Shows submitted count next to status
+    - Send reminder button for non-submitters
+    - Calls /admin/send-reminder endpoint on button click
+
+11. admin_dashboard.html
+    - Admin overview with: total employees, submitted, pending, completion %
+    - Submission status table (all employees, submitted/total, complete status)
+    - Pending KPI reviews section (shows self_assessed records)
+    - Quick action buttons: manage employees, view all reports
+    - KPI review actions: approve, adjust with score input
+
+12. admin_employees.html
+    - Table of all employees with sorting/filtering
+    - Columns: name, email, department, role, grade, status, action
+    - Search/filter by name, email, department
+    - Status: nشط (active) in green, غير نشط (inactive) in red
+    - Click "عرض التفاصيل" to view employee detail page
+
+13. admin_employee_detail.html
+    - Single employee profile view
+    - Basic info: name, email, role, department, grade, phone, hire date
+    - Reports table (last 30 days): date, template, status
+    - KPI history table: period, template, score, grade, status
+    - Statistics: total reports, average KPI score
+    - Status badge indicating nشط (active)
+
+14. admin_all_reports.html
+    - All reports for a selected date with date picker
+    - Shows: employee name, department, template, submission time, status
+    - Status badges: مُرسَل (blue), تمت مراجعته (green), معلَّم (yellow)
+    - View report detail link for each row
+    - Summary by status: submitted, reviewed, flagged counts
+    - Filters by date via GET parameter
+
+================================================================================
+DESIGN DETAILS
+================================================================================
+
+Arabic RTL: dir="rtl" in base.html, all text in Arabic
+
+Color Scheme:
+  - Navy Primary: #1B3A5C
+  - Dark Blue Secondary: #2C5F8A
+  - Gold Accent: #D4A843
+  - Status Badges: green, red, yellow, blue, orange
+
+Font: Cairo (already loaded in base.html via Google Fonts)
+
+CSS Framework: Tailwind CSS (via CDN in base.html)
+
+Styling Classes:
+  - .status-badge with .badge-green, .badge-red, .badge-yellow, .badge-blue
+  - .card (hover effect with transform)
+  - Responsive grid: md:grid-cols-2, md:grid-cols-3, etc.
+  - Rounded corners: rounded-lg (6px), rounded-xl (12px)
+  - Shadows: shadow-sm
+
+Form Inputs:
+  - focus:border-[#1B3A5C]
+  - focus:ring-2 focus:ring-[#1B3A5C]/10
+  - All inputs styled consistently
+
+================================================================================
+FORM FIELD TYPES SUPPORTED
+================================================================================
+
+In submit_report.html and template rendering:
+  - text: standard text input
+  - number: number input with step 0.01
+  - checkbox: toggle with label
+  - select: dropdown from field.options array
+  - textarea: multiline text input
+
+All fields are rendered dynamically from template.fields JSON array.
+Field structure: { key, label_ar, type, options (for select), ... }
+
+================================================================================
+JAVASCRIPT FEATURES
+================================================================================
+
+1. submit_report.html
+   - selectTemplate(id): loads template and renders form
+   - resetForm(): clears form and hides section
+   - Auto-select template from URL parameter
+
+2. kpi_submit.html
+   - updateScore(input, itemId, maxScore): updates score display
+   - calculateTotal(): weighted average calculation
+   - Real-time grade calculation (A-E)
+
+3. create_plan.html
+   - addProductRow(): dynamically adds product input rows
+   - removeProductRow(id): removes product row
+
+4. notifications.html
+   - markAllRead(): calls /notifications/read-all endpoint
+   - markAsRead(id): calls /notifications/read/{id} endpoint
+
+5. team_reports.html
+   - sendReminder(empId, empName): calls /admin/send-reminder
+   - Confirmation dialog before sending
+
+================================================================================
+INTEGRATION WITH APP.PY ROUTES
+================================================================================
+
+All templates extend base.html and use Flask template syntax.
+
+Required context variables are passed from app.py routes:
+
+- submit_report: templates, submitted_ids, current_user
+- report_history: reports, from_date, to_date, current_user
+- view_report: report, current_user, url_for
+- kpi_list: kpi_records, pending_count, avg_score, best_grade, current_user
+- kpi_submit: kpi_record, current_user
+- production: plans, week_start, today, current_user
+- create_plan: current_user
+- notifications: notifications, unread_count, urgent_count, current_user
+- profile: current_user, reports_count, kpi_avg
+- team_reports: team_status, today, current_user
+- admin_dashboard: submission_status, plans, kpi_records, today, employees
+- admin_employees: employees, current_user
+- admin_employee_detail: emp, reports, kpis, avg_kpi, current_user
+- admin_all_reports: reports, target_date, current_user
+
+================================================================================
+KEY FEATURES
+================================================================================
+
+✓ All text in Arabic (RTL)
+✓ Responsive design (mobile-friendly)
+✓ Consistent color scheme and styling
+✓ Cairo font throughout
+✓ Dynamic form generation from templates
+✓ Real-time score calculations
+✓ Status-based color coding
+✓ Admin and employee role separation
+✓ Notification management
+✓ KPI self-assessment interface
+✓ Production planning interface
+✓ Team management for supervisors
+
+================================================================================
+END OF SUMMARY
+================================================================================
