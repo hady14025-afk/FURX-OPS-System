@@ -1,0 +1,12 @@
+run = "pip install -q -r requirements.txt && python app.py"
+language = "python3"
+entrypoint = "app.py"
+
+[nix]
+channel = "stable-23_11"
+
+[env]
+FLASK_ENV = "production"
+
+[deployment]
+run = ["sh", "-c", "pip install -q -r requirements.txt && gunicorn --bind 0.0.0.0:5000 --workers 2 app:app"]
